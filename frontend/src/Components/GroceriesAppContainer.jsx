@@ -1,14 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CartContainer from "./CartContainer";
 import ProductsContainer from "./ProductsContainer";
+import axios from "axios";
 import NavBar from "./NavBar";
+//import ProductForm from "./ProductForm";
 
-export default function GroceriesAppContainer({ products }) {
+
+
+export default function 
+///states
+GroceriesAppContainer({ products }) {
   const [productQuantity, setProductQuantity] = useState(
     products.map((product) => ({ id: product.id, quantity: 0 }))
   );
 
   const [cartList, setCartList] = useState([]);
+  const [productList,setProductList] = useState([])
+
+  ///// useEffect
+
+  useEffect(()=>{
+    handleProductsFromDB()
+  },[]);
+
+
+
+  /// handlers
+  const handleProductsFromDB = async()=>{
+    try{
+      await axios.get("http://localhost:3000/products").then((result)=> setProductList(result.data))
+    }catch(error){
+      console/log(error.message)
+    }
+  }
+
 
   const handleAddQuantity = (productId, mode) => {
     if (mode === "cart") {
@@ -82,6 +107,7 @@ export default function GroceriesAppContainer({ products }) {
     setCartList([]);
   };
 
+  // Renderer
   return (
     <div>
       <NavBar quantity={cartList.length} />
